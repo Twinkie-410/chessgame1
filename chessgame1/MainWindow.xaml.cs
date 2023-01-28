@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Linq;
 
 
 namespace chessgame1
@@ -102,7 +103,8 @@ namespace chessgame1
                     butt.Content = img;
                     butt.Click += Button_Click;
                     butt.state = states[i, j];
-                    butt.position = i.ToString() + j.ToString();
+                    butt.position_x = i;
+                    butt.position_y = j;
 
                     grid.Children.Add(butt);
                 }
@@ -117,15 +119,20 @@ namespace chessgame1
             Btn curr_button = (e.Source as Btn);
             if (prevbutton != null & ismoving )
             {
+                string pos = curr_button.position_x.ToString() + curr_button.position_y.ToString();
                 if (curr_button.state[0] != prevbutton.state[0])
                 {
-                    curr_button.Content = prevbutton.Content;
-                    prevbutton.Content = img;
-                    curr_button.state = prevbutton.state;
-                    prevbutton.state = "empty";
-                    ismoving = false;
+                    if (prevbutton.moves(prevbutton).Contains(pos))
+                    {
+                        curr_button.Content = prevbutton.Content;
+                        prevbutton.Content = img;
+                        curr_button.state = prevbutton.state;
+                        prevbutton.state = "empty";
+                        ismoving = false;
+                    }
                 }
-                else if (curr_button == prevbutton)
+
+                else 
                 {
                     ismoving = false;
                 }
@@ -142,21 +149,12 @@ namespace chessgame1
     public class Btn : Button
     {
         public string state;
-        public string position;
-
-        public void moves(Btn btn)
+        public int position_x;
+        public int position_y;
+        public List<string> moves(Btn btn)
         {
-            if (btn.state == "Bpawn")
-            {
-                for (int i = 0; i < 8; i++)
-                {
-                    if (btn.position[i] != '2')
-                    {
-                       
-                    }
-                }
-                    
-            }
+            return new List<string> { "00", "01","43", };
+            
         }
     }
 
